@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>Vue3 背景色チェンジ（UI中央を大きく）</title>
+    <title>Emotion</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
       html,
@@ -10,7 +10,6 @@
         height: 100%;
         margin: 0;
       }
-      /* 画面全体：背景色を変える */
       #app {
         min-height: 100vh;
         display: flex;
@@ -60,17 +59,16 @@
           const state = reactive({ emotion: "calm" });
 
           const palette = {
-            calm: "#A8D5BA", // 森の緑
-            sad: "#D3D3D3", // 霧の灰
-            joy: "#FFD580", // 夕焼けの橙
-            focus: "#A0C4FF", // 深海の青
+            calm: "#A8D5BA", // 森のグリーン
+            sad: "#D3D3D3", // 霧のグレイ
+            joy: "#FFD580", // 夕焼けのオレンジ
+            focus: "#A0C4FF", // 深海のブルー
           };
 
           const emotionColor = computed(
             () => palette[state.emotion] || "#ffffff"
           );
 
-          // body背景も同期
           const applyBodyBg = (color) => {
             document.body.style.setProperty(
               "background-color",
