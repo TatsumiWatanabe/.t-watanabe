@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Emotion</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      #app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.2rem;
+        transition: background-color 0.4s ease;
+      }
+      select {
+        font-size: 1rem;
+        padding: 6px 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" :style="{ backgroundColor: emotionColor }">
+      <select v-model="emotion">
+        <option value="calm">安心</option>
+        <option value="sad">寂しさ</option>
+        <option value="joy">高揚感</option>
+        <option value="focus">集中</option>
+      </select>
+      <p>今の気分：{{ emotion }} / {{ emotionColor }}</p>
+    </div>
+
+    <script>
+      const { createApp, reactive, computed, watch } = Vue;
+
+      createApp({
+        setup() {
+          const state = reactive({ emotion: "calm" });
+
+          const palette = {
+            calm: "#A8D5BA", // 森のグリーン
+            sad: "#D3D3D3", // 霧のグレイ
+            joy: "#FFD580", // 夕焼けのオレンジ
+            focus: "#A0C4FF", // 深海のブルー
+          };
+
+          const emotionColor = computed(
+            () => palette[state.emotion] || "#ffffff"
+          );
+
+          const applyBodyBg = (color) => {
+            document.body.style.setProperty(
+              "background-color",
+              color,
+              "important"
+            );
+            document.documentElement.style.setProperty(
+              "background-color",
+              color,
+              "important"
+            );
+          };
+
+          applyBodyBg(emotionColor.value);
+
+          watch(emotionColor, (c) => applyBodyBg(c), { immediate: false });
+
+          return {
+            emotion: Vue.toRef(state, "emotion"),
+            emotionColor,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
