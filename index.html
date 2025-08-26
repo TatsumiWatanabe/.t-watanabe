@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>Emotion</title>
+    <title>Vue3 背景色チェンジ（UI中央を大きく）</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
       html,
@@ -10,32 +10,46 @@
         height: 100%;
         margin: 0;
       }
-
+      /* 画面全体：背景色を変える */
       #app {
         min-height: 100vh;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 12px;
-        font-size: 1.2rem;
         transition: background-color 0.4s ease;
       }
+      /* 中央のUIパネルを大きく */
+      .panel {
+        width: min(90vw, 500px);
+        padding: 32px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        font-size: 1.5rem;
+      }
       select {
-        font-size: 1rem;
-        padding: 6px 8px;
+        font-size: 1.2rem;
+        padding: 10px 12px;
+        border-radius: 8px;
       }
     </style>
   </head>
   <body>
     <div id="app" :style="{ backgroundColor: emotionColor }">
-      <select v-model="emotion">
-        <option value="calm">安心</option>
-        <option value="sad">寂しさ</option>
-        <option value="joy">高揚感</option>
-        <option value="focus">集中</option>
-      </select>
-      <p>今の気分：{{ emotion }} / {{ emotionColor }}</p>
+      <div class="panel">
+        <h1 style="margin: 0">気分を選んでください</h1>
+        <select v-model="emotion">
+          <option value="calm">安心</option>
+          <option value="sad">寂しさ</option>
+          <option value="joy">高揚感</option>
+          <option value="focus">集中</option>
+        </select>
+        <p>今の気分：{{ emotion }} / {{ emotionColor }}</p>
+      </div>
     </div>
 
     <script>
@@ -46,16 +60,17 @@
           const state = reactive({ emotion: "calm" });
 
           const palette = {
-            calm: "#A8D5BA", // 森のグリーン
-            sad: "#D3D3D3", // 霧のグレイ
-            joy: "#FFD580", // 夕焼けのオレンジ
-            focus: "#A0C4FF", // 深海のブルー
+            calm: "#A8D5BA", // 森の緑
+            sad: "#D3D3D3", // 霧の灰
+            joy: "#FFD580", // 夕焼けの橙
+            focus: "#A0C4FF", // 深海の青
           };
 
           const emotionColor = computed(
             () => palette[state.emotion] || "#ffffff"
           );
 
+          // body背景も同期
           const applyBodyBg = (color) => {
             document.body.style.setProperty(
               "background-color",
@@ -68,10 +83,8 @@
               "important"
             );
           };
-
           applyBodyBg(emotionColor.value);
-
-          watch(emotionColor, (c) => applyBodyBg(c), { immediate: false });
+          watch(emotionColor, (c) => applyBodyBg(c));
 
           return {
             emotion: Vue.toRef(state, "emotion"),
